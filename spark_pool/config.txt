@@ -1,0 +1,9 @@
+spark.kryoserializer.buffer.max 256m
+spark.yarn.secondary.jars abfss://synapse@${storage_account_name}.dfs.${azure_storage_domain}/jars/tika-app.jar
+spark.yarn.dist.jars abfss://synapse@${storage_account_name}.dfs.${azure_storage_domain}/jars/tika-app.jar
+spark.sql.broadcastTimeout 2000
+spark.synapse.logAnalytics.enabled true
+spark.synapse.logAnalytics.workspaceId ${azure_monitor_workspace_id}
+spark.synapse.logAnalytics.keyVault.name ${key_vault_name}
+spark.synapse.logAnalytics.keyVault.key.secret LogAnalyticsWorkspaceKey
+spark.synapse.logAnalytics.keyVault.linkedServiceName keyvault
