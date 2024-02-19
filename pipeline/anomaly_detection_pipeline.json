@@ -1,0 +1,884 @@
+{
+  "name": "anomaly_detection_pipeline",
+  "properties": {
+    "activities": [
+      {
+        "dependsOn": [],
+        "name": "1_Anomaly_Prep",
+        "notebook": {
+          "referenceName": "1_Anomaly_Prep",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "ais_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.ais_file_path"
+            }
+          },
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blob_account_name"
+            }
+          },
+          "image_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.image_file_path"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.input_container"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.output_container"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "1_Anomaly_Prep",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "ais_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.ais_file_path"
+              }
+            },
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blob_account_name"
+              }
+            },
+            "image_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.image_file_path"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.input_container"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.output_container"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "1_Anomaly_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "1_Process_Satellite_Image",
+        "notebook": {
+          "referenceName": "1_Process_Satellite_Image",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blob_account_name"
+            }
+          },
+          "config_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+            }
+          },
+          "image_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.image_file_path"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.input_container"
+            }
+          },
+          "input_image_low_res": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).input_image_low_res"
+            }
+          },
+          "key_vault_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.key_vault_name"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.output_container"
+            }
+          },
+          "output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).output_path"
+            }
+          },
+          "ship_bb_image_high_res": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "1_Process_Satellite_Image",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blob_account_name"
+              }
+            },
+            "config_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+              }
+            },
+            "image_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.image_file_path"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.input_container"
+              }
+            },
+            "input_image_low_res": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).input_image_low_res"
+              }
+            },
+            "key_vault_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.key_vault_name"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.output_container"
+              }
+            },
+            "output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).output_path"
+              }
+            },
+            "ship_bb_image_high_res": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "1_Anomaly_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "1_Process_AIS_Data",
+        "notebook": {
+          "referenceName": "1_Process_AIS_Data",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "ais_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.ais_file_path"
+            }
+          },
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blob_account_name"
+            }
+          },
+          "config_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+            }
+          },
+          "image_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.image_file_path"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.input_container"
+            }
+          },
+          "kml_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).kml_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.output_container"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "1_Process_AIS_Data",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "ais_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.ais_file_path"
+              }
+            },
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blob_account_name"
+              }
+            },
+            "config_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+              }
+            },
+            "image_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.image_file_path"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.input_container"
+              }
+            },
+            "kml_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).kml_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.output_container"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "1_Process_Satellite_Image",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "1_Process_AIS_Data",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_Detect Anomalies",
+        "notebook": {
+          "referenceName": "2_Detect_Anomalies",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "ais_image": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ais_image"
+            }
+          },
+          "anomaly_image ": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).anomaly_image "
+            }
+          },
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blob_account_name"
+            }
+          },
+          "config_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+            }
+          },
+          "image_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.image_file_path"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.input_container"
+            }
+          },
+          "key_vault_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.key_vault_name"
+            }
+          },
+          "kml_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).kml_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.output_container"
+            }
+          },
+          "output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).output_path"
+            }
+          },
+          "ship_bb_image_high_res ": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res "
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "2_Detect_Anomalies",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "ais_image": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ais_image"
+              }
+            },
+            "anomaly_image ": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).anomaly_image "
+              }
+            },
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blob_account_name"
+              }
+            },
+            "config_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).config_path"
+              }
+            },
+            "image_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.image_file_path"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.input_container"
+              }
+            },
+            "key_vault_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.key_vault_name"
+              }
+            },
+            "kml_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).kml_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.output_container"
+              }
+            },
+            "output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).output_path"
+              }
+            },
+            "ship_bb_image_high_res ": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res "
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_Detect Anomalies",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_1_Anomaly_Eval",
+        "notebook": {
+          "referenceName": "2_1_Anomaly_Eval",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "ais_image": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ais_image"
+            }
+          },
+          "anomaly_found": {
+            "type": "bool",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_found"
+            }
+          },
+          "anomaly_image": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).anomaly_image"
+            }
+          },
+          "anomaly_location": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_location"
+            }
+          },
+          "anomaly_time": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_time"
+            }
+          },
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blob_account_name"
+            }
+          },
+          "input_ais_csv_file": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.ais_file_path"
+            }
+          },
+          "input_image": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.image_file_path"
+            }
+          },
+          "input_image_low_res": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).input_image_low_res"
+            }
+          },
+          "ship_bb_image_high_res": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res"
+            }
+          },
+          "ship_bb_image_low_res": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_low_res"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "2_1_Anomaly_Eval",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "ais_image": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ais_image"
+              }
+            },
+            "anomaly_found": {
+              "type": "bool",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_found"
+              }
+            },
+            "anomaly_image": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).anomaly_image"
+              }
+            },
+            "anomaly_location": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_location"
+              }
+            },
+            "anomaly_time": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Detect Anomalies').output.status.Output.result.exitValue).anomaly_time"
+              }
+            },
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blob_account_name"
+              }
+            },
+            "input_ais_csv_file": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.ais_file_path"
+              }
+            },
+            "input_image": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.image_file_path"
+              }
+            },
+            "input_image_low_res": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).input_image_low_res"
+              }
+            },
+            "ship_bb_image_high_res": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_high_res"
+              }
+            },
+            "ship_bb_image_low_res": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Anomaly_Prep').output.status.Output.result.exitValue).ship_bb_image_low_res"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "parameters": {
+      "ais_file_path": {
+        "defaultValue": "ais.csv",
+        "type": "string"
+      },
+      "azure_storage_domain": {
+        "defaultValue": "<<AZURE_STORAGE_DOMAIN>>",
+        "type": "string"
+      },
+      "blob_account_name": {
+        "defaultValue": "<<STORAGE_ACCOUNT_NAME>>",
+        "type": "string"
+      },
+      "image_file_path": {
+        "defaultValue": "input_image.tif",
+        "type": "string"
+      },
+      "input_container": {
+        "defaultValue": "anomalies",
+        "type": "string"
+      },
+      "key_vault_name": {
+        "defaultValue": "<<KEY_VAULT_NAME>>",
+        "type": "string"
+      },
+      "output_container": {
+        "defaultValue": "anomalies",
+        "type": "string"
+      }
+    }
+  },
+  "type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,3349 @@
+{
+  "name": "processing_pipeline",
+  "properties": {
+    "activities": [
+      {
+        "additionalProperties": null,
+        "dependsOn": [],
+        "description": "Prepare the 3 datasets for text / images / media pipelines",
+        "name": "1_Dataset_Prep",
+        "notebook": {
+          "referenceName": "1_Dataset_Prep",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "manifest_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerFileContainer"
+            }
+          },
+          "manifest_file_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@concat(replace(pipeline().parameters.triggerFilePath, pipeline().parameters.triggerFileContainer, ''), '/', pipeline().parameters.triggerFileName)"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "1_Dataset_Prep",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "manifest_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "manifest_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@concat(replace(pipeline().parameters.triggerFilePath, pipeline().parameters.triggerFileContainer, ''), '/', pipeline().parameters.triggerFileName)"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "Set batch_num",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set batch_root",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_Text_Prep",
+        "notebook": {
+          "referenceName": "2_Text_Prep",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "document_cracking_timeout": {
+            "type": "int",
+            "value": "180"
+          },
+          "documents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).documents_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_Text_Prep",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "document_cracking_timeout": {
+              "type": "int",
+              "value": "180"
+            },
+            "documents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).documents_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_Text_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_1_Text_Enrichment",
+        "notebook": {
+          "referenceName": "2_1_Text_Enrichment",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_1_Text_Enrichment",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "1_Dataset_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Set batch_num",
+        "type": "SetVariable",
+        "typeProperties": {
+          "value": {
+            "type": "Expression",
+            "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_num"
+          },
+          "variableName": "batch_num"
+        },
+        "userProperties": [],
+        "value": {
+          "type": "Expression",
+          "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_num"
+        },
+        "variableName": "batch_num"
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "1_Dataset_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "Set batch_root",
+        "type": "SetVariable",
+        "typeProperties": {
+          "value": {
+            "type": "Expression",
+            "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_root"
+          },
+          "variableName": "batch_root"
+        },
+        "userProperties": [],
+        "value": {
+          "type": "Expression",
+          "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_root"
+        },
+        "variableName": "batch_root"
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_Text_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_2_Text_Summarization_xsum",
+        "notebook": {
+          "referenceName": "2_2_Text_Summarization",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "error_col_name": {
+            "type": "string",
+            "value": "summarization_xsum_error"
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "model_name": {
+            "type": "string",
+            "value": "google/pegasus-xsum"
+          },
+          "output_col_name": {
+            "type": "string",
+            "value": "summarized_text_xsum"
+          },
+          "output_tbl_name": {
+            "type": "string",
+            "value": "summarized_text_xsum"
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_2_Text_Summarization",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "error_col_name": {
+              "type": "string",
+              "value": "summarization_xsum_error"
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "model_name": {
+              "type": "string",
+              "value": "google/pegasus-xsum"
+            },
+            "output_col_name": {
+              "type": "string",
+              "value": "summarized_text_xsum"
+            },
+            "output_tbl_name": {
+              "type": "string",
+              "value": "summarized_text_xsum"
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_Text_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_3_Text_Clustering",
+        "notebook": {
+          "referenceName": "2_3_Text_Clustering",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "batch_description": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "text_file_count": {
+            "type": "int",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).text_file_count"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_3_Text_Clustering",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "batch_description": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "text_file_count": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).text_file_count"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_1_Text_Enrichment",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "2_3_Text_Clustering",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "5_Multimodal_Clustering",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_4_Text_Final",
+        "notebook": {
+          "referenceName": "2_4_Text_Final",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_description": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "clustered_multimodal_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('5_Multimodal_Clustering').output.status.Output.result.exitValue).clustered_multimodal_tbl_name"
+            }
+          },
+          "clustered_text_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_3_Text_Clustering').output.status.Output.result.exitValue).clustered_text_tbl_name"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "enriched_text_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_1_Text_Enrichment').output.status.Output.result.exitValue).enriched_text_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerFileContainer"
+            }
+          },
+          "manifest_file_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).manifest_file_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": "output"
+          },
+          "text_prep_errors_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).text_prep_errors_tbl_name"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_4_Text_Final",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_description": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "clustered_multimodal_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('5_Multimodal_Clustering').output.status.Output.result.exitValue).clustered_multimodal_tbl_name"
+              }
+            },
+            "clustered_text_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_3_Text_Clustering').output.status.Output.result.exitValue).clustered_text_tbl_name"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "enriched_text_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_1_Text_Enrichment').output.status.Output.result.exitValue).enriched_text_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "manifest_file_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).manifest_file_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": "output"
+            },
+            "text_prep_errors_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).text_prep_errors_tbl_name"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_Text_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_2_Text_Summarization_dailymail",
+        "notebook": {
+          "referenceName": "2_2_Text_Summarization",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "error_col_name": {
+            "type": "string",
+            "value": "summarization_dailymail_error"
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "model_name": {
+            "type": "string",
+            "value": "google/pegasus-cnn_dailymail"
+          },
+          "output_col_name": {
+            "type": "string",
+            "value": "summarized_text_dailymail"
+          },
+          "output_tbl_name": {
+            "type": "string",
+            "value": "summarized_text_dailymail"
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_2_Text_Summarization",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "error_col_name": {
+              "type": "string",
+              "value": "summarization_dailymail_error"
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "model_name": {
+              "type": "string",
+              "value": "google/pegasus-cnn_dailymail"
+            },
+            "output_col_name": {
+              "type": "string",
+              "value": "summarized_text_dailymail"
+            },
+            "output_tbl_name": {
+              "type": "string",
+              "value": "summarized_text_dailymail"
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_2_Text_Summarization_dailymail",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "2_2_Text_Summarization_xsum",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_5_Text_Summarisation_final",
+        "notebook": {
+          "referenceName": "2_5_Text_Final_Summarisation",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_description": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "documents_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerFileContainer"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": "output"
+          },
+          "summarized_text_dailymail_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_2_Text_Summarization_dailymail').output.status.Output.result.exitValue).summarized_text_tbl_name"
+            }
+          },
+          "summarized_text_xsum_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_2_Text_Summarization_xsum').output.status.Output.result.exitValue).summarized_text_tbl_name"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_5_Text_Final_Summarisation",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_description": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_Text_Prep').output.status.Output.result.exitValue).documents_contents_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": "output"
+            },
+            "summarized_text_dailymail_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_2_Text_Summarization_dailymail').output.status.Output.result.exitValue).summarized_text_tbl_name"
+              }
+            },
+            "summarized_text_xsum_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_2_Text_Summarization_xsum').output.status.Output.result.exitValue).summarized_text_tbl_name"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "2_4_Text_Final",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "3_4_Image_Final",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_6_Text_Ruleset_Eval",
+        "notebook": {
+          "referenceName": "2_6_Text_Ruleset_Eval",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_description": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+            }
+          },
+          "batch_file_count": {
+            "type": "int",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_file_count"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerFileContainer"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": "output"
+          },
+          "processed_images_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_4_Image_Final').output.status.Output.result.exitValue).processed_images_tbl_name"
+            }
+          },
+          "processed_text_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('2_4_Text_Final').output.status.Output.result.exitValue).processed_text_tbl_name"
+            }
+          },
+          "rules_container": {
+            "type": "string",
+            "value": "rules"
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_6_Text_Ruleset_Eval",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_description": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+              }
+            },
+            "batch_file_count": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_file_count"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": "output"
+            },
+            "processed_images_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_4_Image_Final').output.status.Output.result.exitValue).processed_images_tbl_name"
+              }
+            },
+            "processed_text_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_4_Text_Final').output.status.Output.result.exitValue).processed_text_tbl_name"
+              }
+            },
+            "rules_container": {
+              "type": "string",
+              "value": "rules"
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "Set batch_root",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set batch_num",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_Image_Prep",
+        "notebook": {
+          "referenceName": "3_Image_Prep",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "images_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).images_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_Image_Prep",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "images_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).images_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_Image_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_1_Image_Enrichment",
+        "notebook": {
+          "referenceName": "3_1_Image_Enrichment",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_1_Image_Enrichment",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_2_Image_Feature_Extraction",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_3_Image_Clustering_1",
+        "notebook": {
+          "referenceName": "3_3_Image_Clustering",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_clustering_config": {
+            "type": "string",
+            "value": "image_clustering_1"
+          },
+          "image_features_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_3_Image_Clustering",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_clustering_config": {
+              "type": "string",
+              "value": "image_clustering_1"
+            },
+            "image_features_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_1_Image_Enrichment",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "3_3_Image_Clustering_1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "3_3_Image_Clustering_3",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "3_3_Image_Clustering_2",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "5_Multimodal_Clustering",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_4_Image_Final",
+        "notebook": {
+          "referenceName": "3_4_Image_Final",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_description": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "clustered_images_tbl_name_1": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_3_Image_Clustering_1').output.status.Output.result.exitValue).clustered_image_tbl_name"
+            }
+          },
+          "clustered_images_tbl_name_2": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_3_Image_Clustering_2').output.status.Output.result.exitValue).clustered_image_tbl_name"
+            }
+          },
+          "clustered_images_tbl_name_3": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_3_Image_Clustering_3').output.status.Output.result.exitValue).clustered_image_tbl_name"
+            }
+          },
+          "clustered_multimodal_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('5_Multimodal_Clustering').output.status.Output.result.exitValue).clustered_multimodal_tbl_name"
+            }
+          },
+          "enriched_images_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_1_Image_Enrichment').output.status.Output.result.exitValue).enriched_image_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+            }
+          },
+          "image_file_count": {
+            "type": "int",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).image_file_count"
+            }
+          },
+          "input_container": {
+            "type": "string",
+            "value": "input"
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": "output"
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_4_Image_Final",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_description": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_description"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "clustered_images_tbl_name_1": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_3_Image_Clustering_1').output.status.Output.result.exitValue).clustered_image_tbl_name"
+              }
+            },
+            "clustered_images_tbl_name_2": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_3_Image_Clustering_2').output.status.Output.result.exitValue).clustered_image_tbl_name"
+              }
+            },
+            "clustered_images_tbl_name_3": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_3_Image_Clustering_3').output.status.Output.result.exitValue).clustered_image_tbl_name"
+              }
+            },
+            "clustered_multimodal_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('5_Multimodal_Clustering').output.status.Output.result.exitValue).clustered_multimodal_tbl_name"
+              }
+            },
+            "enriched_images_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_1_Image_Enrichment').output.status.Output.result.exitValue).enriched_image_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+              }
+            },
+            "image_file_count": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).image_file_count"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": "input"
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": "output"
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_2_Image_Feature_Extraction",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_3_Image_Clustering_2",
+        "notebook": {
+          "referenceName": "3_3_Image_Clustering",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_clustering_config": {
+            "type": "string",
+            "value": "image_clustering_2"
+          },
+          "image_features_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_3_Image_Clustering",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_clustering_config": {
+              "type": "string",
+              "value": "image_clustering_2"
+            },
+            "image_features_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_2_Image_Feature_Extraction",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_3_Image_Clustering_3",
+        "notebook": {
+          "referenceName": "3_3_Image_Clustering",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_clustering_config": {
+            "type": "string",
+            "value": "image_clustering_3"
+          },
+          "image_features_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_3_Image_Clustering",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_clustering_config": {
+              "type": "string",
+              "value": "image_clustering_3"
+            },
+            "image_features_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_2_Image_Feature_Extraction').output.status.Output.result.exitValue).image_features_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "3_Image_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "3_2_Image_Feature_Extraction",
+        "notebook": {
+          "referenceName": "3_2_Image_Feature_Extraction",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "image_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "3_2_Image_Feature_Extraction",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "image_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_Image_Prep').output.status.Output.result.exitValue).image_contents_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "Set batch_root",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set batch_num",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "4_Media_Prep",
+        "notebook": {
+          "referenceName": "4_Media_Prep",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')\n"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "media_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).media_tbl_name\n"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "4_Media_Prep",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')\n"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "media_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).media_tbl_name\n"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "4_Media_Prep",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "4_1_Media_Enrichment",
+        "notebook": {
+          "referenceName": "4_1_Media_Enrichment",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_file_count": {
+            "type": "int",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_file_count"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_num')"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@variables('batch_root')"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.triggerBlobAccount"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+            }
+          },
+          "media_contents_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('4_Media_Prep').output.status.Output.result.exitValue).media_contents_tbl_name"
+            }
+          },
+          "minted_tables_output_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": "output"
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "4_1_Media_Enrichment",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_file_count": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).batch_file_count"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "media_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('4_Media_Prep').output.status.Output.result.exitValue).media_contents_tbl_name"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": "output"
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "2_2_Text_Summarization_xsum",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "3_1_Image_Enrichment",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "5_Multimodal_Clustering",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {},
+          "notebook": {
+            "referenceName": "5_Multimodal_Clustering",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "documents_contents_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_2_Text_Summarization_xsum').output.status.Output.result.exitValue).summarized_text_tbl_name"
+              }
+            },
+            "enriched_images_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('3_1_Image_Enrichment').output.status.Output.result.exitValue).enriched_image_tbl_name"
+              }
+            },
+            "error_col_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "summarization_xsum_error"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "manifest_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "manifest_file_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).manifest_file_name"
+              }
+            },
+            "manifest_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@concat(replace(pipeline().parameters.triggerFilePath, pipeline().parameters.triggerFileContainer, ''), '/', pipeline().parameters.triggerFileName)"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "model_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "sentence-transformers/all-mpnet-base-v2"
+              }
+            },
+            "output_col_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "summarized_text_xsum"
+              }
+            },
+            "output_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "summarized_text_xsum"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "2_6_Text_Ruleset_Eval",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "2_5_Text_Summarisation_final",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_7_Status_Final",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {
+            "spark.dynamicAllocation.enabled": null,
+            "spark.dynamicAllocation.maxExecutors": null,
+            "spark.dynamicAllocation.minExecutors": null
+          },
+          "notebook": {
+            "referenceName": "2_7_Status_Final",
+            "type": "NotebookReference"
+          },
+          "numExecutors": null,
+          "parameters": {
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "dependsOn": [
+          {
+            "activity": "2_2_Text_Summarization_dailymail",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "2_8_Text_Relation_Extraction",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "conf": {},
+          "notebook": {
+            "referenceName": "2_8_Text_Relation_Extraction",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_num')"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_root')"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerBlobAccount"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).file_system"
+              }
+            },
+            "input_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "manifest_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.triggerFileContainer"
+              }
+            },
+            "manifest_file_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@concat(replace(pipeline().parameters.triggerFilePath, pipeline().parameters.triggerFileContainer, ''), '/', pipeline().parameters.triggerFileName)"
+              }
+            },
+            "minted_tables_output_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('1_Dataset_Prep').output.status.Output.result.exitValue).minted_tables_output_path"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "output"
+              }
+            },
+            "summarized_text_dailymail_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('2_2_Text_Summarization_dailymail').output.status.Output.result.exitValue).summarized_text_tbl_name"
+              }
+            }
+          },
+          "snapshot": true
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "description": "An example pipeline for illustrating how we trigger a pipeline via a batch file upload to blob, which then invokes a notebook to process it.",
+    "parameters": {
+      "azure_storage_domain": {
+        "defaultValue": "<<AZURE_STORAGE_DOMAIN>>",
+        "type": "string"
+      },
+      "logLevel": {
+        "defaultValue": "INFO",
+        "type": "string"
+      },
+      "triggerBlobAccount": {
+        "type": "string"
+      },
+      "triggerFileContainer": {
+        "type": "string"
+      },
+      "triggerFileName": {
+        "type": "string"
+      },
+      "triggerFilePath": {
+        "type": "string"
+      }
+    },
+    "policy": {
+      "cancelAfter": {},
+      "elapsedTimeMetric": {}
+    },
+    "variables": {
+      "batch_num": {
+        "type": "String"
+      },
+      "batch_root": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "Microsoft.Synapse/workspaces/pipelines"
+}

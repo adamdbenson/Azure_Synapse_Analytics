@@ -1,0 +1,35 @@
+{
+  "name": "warmup_pipeline",
+  "properties": {
+    "activities": [
+      {
+        "additionalProperties": null,
+        "dependsOn": [],
+        "name": "Warmup",
+        "notebook": {
+          "referenceName": "Util_Warmup",
+          "type": "NotebookReference"
+        },
+        "parameters": null,
+        "policy": {
+          "additionalProperties": null,
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "Util_Warmup",
+            "type": "NotebookReference"
+          }
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": []
+  },
+  "type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,426 @@
+{
+  "name": "video_enrichment_pipeline",
+  "properties": {
+    "activities": [
+      {
+        "additionalProperties": null,
+        "dependsOn": [],
+        "name": "4_2_Media_Enrichment_Callback",
+        "notebook": {
+          "referenceName": "4_2_Media_Enrichment_Callback",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.batchNumber"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.batchRoot"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blobAccountName"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.fileSystem"
+            }
+          },
+          "json_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.jsonPath"
+            }
+          },
+          "log_level": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.logLevel"
+            }
+          },
+          "media_file_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.mediaFileName"
+            }
+          },
+          "media_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.mediaPath"
+            }
+          },
+          "output_container": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.outputContainer"
+            }
+          },
+          "state": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.state"
+            }
+          },
+          "video_id": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.videoId"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "4_2_Media_Enrichment_Callback",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.batchNumber"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.batchRoot"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blobAccountName"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.fileSystem"
+              }
+            },
+            "json_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.jsonPath"
+              }
+            },
+            "log_level": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.logLevel"
+              }
+            },
+            "media_file_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.mediaFileName"
+              }
+            },
+            "media_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.mediaPath"
+              }
+            },
+            "output_container": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.outputContainer"
+              }
+            },
+            "state": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.state"
+              }
+            },
+            "video_id": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.videoId"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      },
+      {
+        "additionalProperties": null,
+        "dependsOn": [
+          {
+            "activity": "4_2_Media_Enrichment_Callback",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "name": "4_3_Media_Ruleset_Eval",
+        "notebook": {
+          "referenceName": "4_3_Media_Ruleset_Eval",
+          "type": "NotebookReference"
+        },
+        "parameters": {
+          "azure_storage_domain": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.azure_storage_domain"
+            }
+          },
+          "batch_num": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.batchNumber"
+            }
+          },
+          "batch_root": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.batchRoot"
+            }
+          },
+          "blob_account_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.blobAccountName"
+            }
+          },
+          "enriched_media_tbl_name": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@json(activity('4_2_Media_Enrichment_Callback').output.status.Output.result.exitValue).enriched_media_tbl_name"
+            }
+          },
+          "file_system": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.fileSystem"
+            }
+          },
+          "json_path": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.jsonPath"
+            }
+          },
+          "log_level": {
+            "type": "string",
+            "value": "INFO"
+          },
+          "rules_container": {
+            "type": "string",
+            "value": "rules"
+          },
+          "state": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.state"
+            }
+          },
+          "video_id": {
+            "type": "string",
+            "value": {
+              "type": "Expression",
+              "value": "@pipeline().parameters.videoId"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "7.00:00:00"
+        },
+        "type": "SynapseNotebook",
+        "typeProperties": {
+          "notebook": {
+            "referenceName": "4_3_Media_Ruleset_Eval",
+            "type": "NotebookReference"
+          },
+          "parameters": {
+            "azure_storage_domain": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.azure_storage_domain"
+              }
+            },
+            "batch_num": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.batchNumber"
+              }
+            },
+            "batch_root": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.batchRoot"
+              }
+            },
+            "blob_account_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.blobAccountName"
+              }
+            },
+            "enriched_media_tbl_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('4_2_Media_Enrichment_Callback').output.status.Output.result.exitValue).enriched_media_tbl_name"
+              }
+            },
+            "file_system": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.fileSystem"
+              }
+            },
+            "json_path": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.jsonPath"
+              }
+            },
+            "log_level": {
+              "type": "string",
+              "value": "INFO"
+            },
+            "rules_container": {
+              "type": "string",
+              "value": "rules"
+            },
+            "state": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.state"
+              }
+            },
+            "video_id": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@pipeline().parameters.videoId"
+              }
+            }
+          }
+        },
+        "userProperties": []
+      }
+    ],
+    "annotations": [],
+    "parameters": {
+      "azure_storage_domain": {
+        "defaultValue": "<<AZURE_STORAGE_DOMAIN>>",
+        "type": "string"
+      },
+      "batchDescription": {
+        "type": "string"
+      },
+      "batchNumber": {
+        "type": "string"
+      },
+      "batchRoot": {
+        "type": "string"
+      },
+      "blobAccountName": {
+        "defaultValue": "<<STORAGE_ACCOUNT_NAME>>",
+        "type": "string"
+      },
+      "fileSystem": {
+        "type": "string"
+      },
+      "jsonPath": {
+        "type": "string"
+      },
+      "logLevel": {
+        "defaultValue": "INFO",
+        "type": "string"
+      },
+      "mediaFileName": {
+        "type": "string"
+      },
+      "mediaPath": {
+        "type": "string"
+      },
+      "outputContainer": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      },
+      "videoId": {
+        "type": "string"
+      }
+    }
+  },
+  "type": "Microsoft.Synapse/workspaces/pipelines"
+}
