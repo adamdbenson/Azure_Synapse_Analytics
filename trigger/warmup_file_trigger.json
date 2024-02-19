@@ -1,0 +1,34 @@
+{
+  "properties": {
+    "additionalProperties": null,
+    "annotations": [],
+    "blobPathBeginsWith": "/warmup/",
+    "blobPathEndsWith": ".warmup",
+    "description": "Trigger a pipeline based on a .warmup file uploaded to the warmup container.",
+    "events": [
+      "Microsoft.Storage.BlobCreated"
+    ],
+    "ignoreEmptyBlobs": false,
+    "pipelines": [
+      {
+        "parameters": {},
+        "pipelineReference": {
+          "referenceName": "warmup_pipeline",
+          "type": "PipelineReference"
+        }
+      }
+    ],
+    "runtimeState": "Started",
+    "scope": "/subscriptions/<<SUBSCRIPTION_ID>>/resourceGroups/<<RESOURCE_GROUP>>/providers/Microsoft.Storage/storageAccounts/<<STORAGE_ACCOUNT_NAME>>",
+    "type": "BlobEventsTrigger",
+    "typeProperties": {
+      "blobPathBeginsWith": "/warmup/",
+      "blobPathEndsWith": ".warmup",
+      "events": [
+        "Microsoft.Storage.BlobCreated"
+      ],
+      "ignoreEmptyBlobs": false,
+      "scope": "/subscriptions/<<SUBSCRIPTION_ID>>/resourceGroups/<<RESOURCE_GROUP>>/providers/Microsoft.Storage/storageAccounts/<<STORAGE_ACCOUNT_NAME>>"
+    }
+  }
+}

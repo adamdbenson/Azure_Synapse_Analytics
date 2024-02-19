@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "additionalProperties": null,
+    "annotations": [],
+    "blobPathBeginsWith": "/input/",
+    "blobPathEndsWith": "manifest.txt",
+    "description": "Trigger a pipeline based of manifest.txt files uploaded to blob storage.",
+    "events": [
+      "Microsoft.Storage.BlobCreated"
+    ],
+    "ignoreEmptyBlobs": true,
+    "pipelines": [
+      {
+        "parameters": {
+          "keyVaultName": "<<KEY_VAULT_NAME>>",
+          "logLevel": "INFO",
+          "triggerBlobAccount": "<<STORAGE_ACCOUNT_NAME>>",
+          "triggerFileContainer": "@split(triggerBody().folderPath, '/')[0]",
+          "triggerFileName": "@triggerBody().fileName",
+          "triggerFilePath": "@triggerBody().folderPath"
+        },
+        "pipelineReference": {
+          "referenceName": "processing_pipeline",
+          "type": "PipelineReference"
+        }
+      }
+    ],
+    "runtimeState": "Started",
+    "scope": "/subscriptions/<<SUBSCRIPTION_ID>>/resourceGroups/<<RESOURCE_GROUP>>/providers/Microsoft.Storage/storageAccounts/<<STORAGE_ACCOUNT_NAME>>",
+    "type": "BlobEventsTrigger",
+    "typeProperties": {
+      "blobPathBeginsWith": "/input/",
+      "blobPathEndsWith": "manifest.txt",
+      "events": [
+        "Microsoft.Storage.BlobCreated"
+      ],
+      "ignoreEmptyBlobs": true,
+      "scope": "/subscriptions/<<SUBSCRIPTION_ID>>/resourceGroups/<<RESOURCE_GROUP>>/providers/Microsoft.Storage/storageAccounts/<<STORAGE_ACCOUNT_NAME>>"
+    }
+  }
+}
